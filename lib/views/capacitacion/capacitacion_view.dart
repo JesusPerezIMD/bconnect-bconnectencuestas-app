@@ -48,11 +48,14 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   Capacitacion? oencuesta;
   List<Capacitacion> encuestas = [];
   String? userid = '';
-  String serviceName=Environment().SERVICE_NAME;
+  String serviceName = Environment().SERVICE_NAME;
+  bool isLoading = false;
+  final TextEditingController _searchController = TextEditingController();
 
   Future<void> getEncuestas(String division) async {
     var colemp = colaborador?.codemp;
-    var result = await BConnectService().getCapacitacion(division, serviceName, colemp!);
+    var result =
+        await BConnectService().getCapacitacion(division, serviceName, colemp!);
 
     if (mounted) {
       setState(() {
@@ -104,184 +107,130 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final userInitials =
-        '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
+  List<Capacitacion> filteredEncuestas = [];
 
-    final lastRecord = selectedCustomer?.ultimoCenso ?? '';
-    return Scaffold(
-      appBar: BconnectAppBar(
-        onPressed: () => {
-          Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => AccountPage(
-                      user ?? BCUser(), colaborador ?? BCColaborador())))
-        },
-        userInitials: userInitials,
-      ),
-      bottomNavigationBar: const NavigationBarComponenet(0),
-      body: SingleChildScrollView(
-          padding: const EdgeInsets.all(10),
-          child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                minHeight: 500,
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Form(
-                      key: _formKey,
-                      child: Column(children: [
-                        const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "Capacitación*",
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(bottom: 0),
-                            child: ddlEncuestas()),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        btnSave(),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Text(lastRecord != ''
-                            ? 'Último registro: ${DateFormat('dd-MM-yyyy h:mm a').format(DateTime.parse(lastRecord).toLocal())}'
-                            : '')
-                      ]))))),
-    );
-    // );
-  }
+@override
+Widget build(BuildContext context) {
+  final userInitials =
+      '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
 
-  DropdownButtonFormField ddlEncuestas() {
-    return DropdownButtonFormField(
-      decoration: const InputDecoration(
-        hintText: 'Seleccione una capacitación',
-        border: InputBorder.none,
-        filled: false,
-        fillColor: Color.fromRGBO(204, 204, 204, 80),
-        hintStyle: TextStyle(fontWeight: FontWeight.bold)),
-      value: oencuesta,
-      items: encuestas.isNotEmpty
-        ? encuestas.map((item) {
-            return DropdownMenuItem(
-              value: item,
-              child: Text(item.bc_nombre.toString()),
-            );
-          }).toList()
-        : [DropdownMenuItem(
-            value: "NoData",
-            child: Text("No existen datos"),
-          )], // Agrega esta línea
-      icon: const Icon(
-        Icons.expand_more,
-        color: Colors.red,
-      ),
-      validator: (value) {
-        if (value == "NoData") {
-          return 'No hay datos disponibles';
-        }
-        if (value == null) {
-          return 'Seleccione una capacitación';
-        }
-        return null;
+  return Scaffold(
+    appBar: BconnectAppBar(
+      onPressed: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => AccountPage(
+                    user ?? BCUser(), colaborador ?? BCColaborador())))
       },
-      onChanged: (value) {
-        setState(() {
-          if (value == "NoData") {
-            return;
-          }
-          oencuesta = value;
-        });
-      }
-    );
-  }
-
-  Future<void> _launchUrl() async {
-    final url = Uri.parse(
-        'https://wa.me/?text=Hola,%20te%20invito%20a%20usar%20el%20servicio%capacitacion%20para%20reportar%20oportunidades%20de%20Coca-Cola%202.5L%20Retornable%0Ahttps://wa.me/%2b$whatsappNumber?text=Censo');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch url');
-    }
-  }
-
-  SizedBox btnGoogleMaps() {
-    return SizedBox(
-        width: 600,
-        height: 50,
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: ElevatedButton(
-              onPressed: () {
-                if (selectedCustomer != null) {
-                  _launchMapsUrl(
-                    selectedCustomer!.latitude!,
-                    selectedCustomer!.longitude!,
-                  );
-                }
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  // Icon(
-                  //   Icons.map,
-                  //   color: Colors.black,
-                  // ),
-                  SizedBox(width: 8),
-                  Text(
-                    'Buscar en Google Maps',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
+      userInitials: userInitials,
+    ),
+    bottomNavigationBar: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: btnSave(),
+        ),
+        NavigationBarComponenet(0),
+      ],
+    ),
+    body: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Material(
+              elevation: 0.0,
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: 'Buscar Encuesta',
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(color: Colors.grey, width: 0.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderSide: BorderSide(color: Colors.grey, width: 0.5),
                     ),
                   ),
-                ],
+                  onChanged: (value) {
+                    setState(() {
+                      filteredEncuestas = encuestas
+                          .where((encuesta) => encuesta.bc_nombre!.toLowerCase().contains(value.toLowerCase()))
+                          .toList();
+                    });
+                  },
+                ),
               ),
-            )));
-  }
-
-  Future<void> _launchMapsUrl(num lat, num lng) async {
-    final url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  Future<void> _launchWhatsApp() async {
-    final url = Uri.parse('https://wa.me/%2b$whatsappNumber');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch url');
-    }
-  }
-
-  void showValidImages() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(msgErrorImagenes),
-        backgroundColor: Colors.red,
+            ),
+            Expanded(
+              child: filteredEncuestas.isEmpty && _searchController.text.isEmpty
+                  ? ListView.builder(
+                      itemCount: encuestas.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              oencuesta = encuestas[index];
+                            });
+                          },
+                          child: Container(
+                            color: oencuesta == encuestas[index]
+                                ? Colors.grey.withOpacity(0.4)
+                                : Colors.transparent,
+                            child: ListTile(
+                              title: Text(encuestas[index].bc_nombre.toString()),
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : filteredEncuestas.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No existen datos...",
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        )
+                      : ListView.builder(
+                          itemCount: filteredEncuestas.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  oencuesta = filteredEncuestas[index];
+                                });
+                              },
+                              child: Container(
+                                color: oencuesta == filteredEncuestas[index]
+                                    ? Colors.grey.withOpacity(0.4)
+                                    : Colors.transparent,
+                                child: ListTile(
+                                  title: Text(filteredEncuestas[index].bc_nombre.toString()),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+            )
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+
+
 
   void showValidForm() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -292,76 +241,48 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     );
   }
 
-
   SizedBox btnSave() {
-    return SizedBox(
-        width: 600,
-        height: 50,
-        //height: getProportionatedScreenHeight(50),
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: ElevatedButton(
-                onPressed: isLoadingButton ? null : onSubmit,
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)))),
-                child: !isLoadingButton
-                    ? const Text(
-                        'Enviar Solicitud',
-                        style: TextStyle(fontSize: 16),
-                      )
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 28,
-                            height: 28,
-                            padding: const EdgeInsets.all(5.0),
-                            child: const CircularProgressIndicator(
-                              strokeWidth: 3,
-                            ),
-                          ),
-                          const Text(
-                            'Enviando...',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ))));
-  }
-
-  SizedBox btnShare() {
-    return SizedBox(
-        width: 600,
-        height: 50,
-        //height: getProportionatedScreenHeight(50),
-        child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: TextButton(
-                onPressed: () {
-                  if (defaultTargetPlatform == TargetPlatform.iOS ||
-                      defaultTargetPlatform == TargetPlatform.android) {
-                    Share.share(
-                        'Hola, te invito a usar el servicio Capacitación para reportar oportunidades de Coca-Cola 2.5L Retornable\nhttps://wa.me/+$whatsappNumber?text=Capacitación',
-                        subject: 'Invitación Capacitación');
-                  } else {
-                    _launchUrl();
-                  }
-                },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.transparent),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)))),
-                child: const Text(
-                  'Invitar a otros Colaboradores',
-                  style: TextStyle(
-                    fontSize: 16,
-                    decoration: TextDecoration.underline,
+  return SizedBox(
+    width: 600,
+    height: 50,
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: ElevatedButton(
+        onPressed: oencuesta != null ? onSubmit : null,
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
+        ),
+        child: !isLoadingButton
+            ? const Text(
+                'Seleccionar',
+                style: TextStyle(fontSize: 16),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 28,
+                    height: 28,
+                    padding: const EdgeInsets.all(5.0),
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 3,
+                    ),
                   ),
-                ))));
-  }
+                  const Text(
+                    'Procesando...',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+      ),
+    ),
+  );
+}
+
 
   onSubmit() {
     if (_formKey.currentState!.validate() && isValid) {
@@ -380,7 +301,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
 
     encuesta = oencuesta?.bc_nombre;
     codigo = colaborador?.codemp;
-    division= colaborador?.division;
+    division = colaborador?.division;
     telefono = colaborador?.phone;
     nombre_empleado = colaborador?.names!;
     apellido_empleado = colaborador?.lastNames;
