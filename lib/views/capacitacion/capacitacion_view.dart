@@ -62,7 +62,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
         if (result.isNotEmpty) {
           //result.sort((a, b) => (a.bc_nombre ?? '').compareTo(b.bc_nombre ?? ''));
           encuestas = result;
-          oencuesta = encuestas.first;
+          oencuesta = null;
         } else {
           encuestas = [];
           oencuesta = null;
@@ -167,6 +167,8 @@ Widget build(BuildContext context) {
                       filteredEncuestas = encuestas
                           .where((encuesta) => encuesta.bc_nombre!.toLowerCase().contains(value.toLowerCase()))
                           .toList();
+
+                          oencuesta = null;
                     });
                   },
                 ),
