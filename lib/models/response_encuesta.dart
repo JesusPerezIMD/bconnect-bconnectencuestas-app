@@ -1,40 +1,67 @@
 class SolicitudCapacitacion {
-  String? crd52_responseencuestaid;
+  String? bc_bitacoraencuestaid;
   DateTime? createdon;
   int? statecode;
-  String? crd52_nombre;
-  String? bp_compania;
-  String? bp_division;
-  String? bp_colaborador;
-  String? bp_colaboradorname;
-  String? bp_jsonresponse;
-  String? bp_folio;
-  String? bp_codemp;
+  String? statecodename;
+  String? bc_name;
+  String? bc_colaborador;
+  String? bc_division;
+  String? bc_compania;
+  String? bc_servicio;
+  String? bc_servicioname;
+  String? bc_encuesta;
+  String? bc_encuestaname;
+  String? bc_cliente;
+  DateTime? bc_inicio;
+  DateTime? bc_fin;
+  String? bc_respuestaencuesta;
+  String? bc_respuestaencuestaname;
+  int? bc_finalizado;
+  String? bc_finalizadoname;
+  String? bc_folio;
 
   SolicitudCapacitacion({
-    this.crd52_responseencuestaid,
-    this.createdon,
-    this.statecode,
-    this.crd52_nombre,
-    this.bp_compania,
-    this.bp_division,
-    this.bp_colaborador,
-    this.bp_colaboradorname,
-    this.bp_jsonresponse,
-    this.bp_folio,
-    this.bp_codemp,
+    required this.bc_bitacoraencuestaid,
+    required this.createdon,
+    required this.statecode,
+    required this.statecodename,
+    required this.bc_name,
+    required this.bc_colaborador,
+    required this.bc_division,
+    required this.bc_compania,
+    required this.bc_servicio,
+    required this.bc_servicioname,
+    required this.bc_encuesta,
+    required this.bc_encuestaname,
+    required this.bc_cliente,
+    required this.bc_inicio,
+    required this.bc_fin,
+    required this.bc_respuestaencuesta,
+    required this.bc_respuestaencuestaname,
+    required this.bc_finalizado,
+    required this.bc_finalizadoname,
+    required this.bc_folio,
   });
   SolicitudCapacitacion.fromJson(Map<String, dynamic> json) {
-    crd52_responseencuestaid = json['crd52_responseencuestaid'];
-    createdon = json['createdon'] != null ? DateTime.parse(json['createdon']) : null;
-    statecode = json['statecode'];
-    crd52_nombre = json['crd52_nombre'];
-    bp_compania = json['bp_compania'];
-    bp_division = json['bp_division'];
-    bp_colaborador = json['bp_colaborador'];
-    bp_colaboradorname = json['bp_colaboradorname'];
-    bp_jsonresponse = json['bp_jsonresponse'];
-    bp_folio = json['bp_folio'];
-    bp_codemp = json['bp_codemp'];
+      bc_bitacoraencuestaid = json['bc_bitacoraencuestaid'] ?? '';
+      createdon = json['createdon'] != null ? DateTime.parse(json['createdon']) : null;
+      statecode = json['statecode'] ?? 0;
+      statecodename = json['statecodename'] ?? '';
+      bc_name = json['bc_name'] ?? '';
+      bc_colaborador = json['bc_colaborador'] ?? '';
+      bc_division = json['bc_division'] ?? '';
+      bc_compania = json['bc_compania'] ?? '';
+      bc_servicio = json['bc_servicio'] ?? '';
+      bc_servicioname = json['bc_servicioname'] ?? '';
+      bc_encuesta = json['bc_encuesta'] ?? '';
+      bc_encuestaname = json['bc_encuestaname'] ?? '';
+      bc_cliente = json['bc_cliente'] ?? '';
+      bc_inicio = json['bc_inicio'] != null ? DateTime.parse(json['bc_inicio']) : null;
+      bc_fin = json['bc_fin'] != null ? DateTime.parse(json['bc_fin']) : null;
+      bc_respuestaencuesta = json['bc_respuestaencuesta'] ?? '';
+      bc_respuestaencuestaname = json['bc_respuestaencuestaname'] ?? '';
+      bc_finalizado = json['bc_finalizado'] ?? 0;
+      bc_finalizadoname = json['bc_finalizadoname'] ?? '';
+      bc_folio = json['bc_folio'] ?? '';
   }
 }

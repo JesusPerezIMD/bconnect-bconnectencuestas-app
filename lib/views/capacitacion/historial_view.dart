@@ -38,9 +38,9 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
         if (result.isNotEmpty) {
           encuestas = result;
           filteredEncuestas = encuestas;
-          selectedResult = filteredEncuestas.first.crd52_nombre;
+          selectedResult = filteredEncuestas.first.bc_encuestaname;
           filteredEncuestas = encuestas
-              .where((encuesta) => encuesta.crd52_nombre == selectedResult)
+              .where((encuesta) => encuesta.bc_encuestaname == selectedResult)
               .toList();
           loadingReports = false;
         } else {
@@ -126,16 +126,15 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
                     ),
                   ),
                 ),
-Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-  child: Column(
-    children: [
-      ddlEstatus(), // Aquí llamas al DropdownButtonFormField
-      SizedBox(height: 10), // Espacio adicional hacia abajo
-    ],
-  ),
-),
-
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    children: [
+                      ddlEstatus(), // Aquí llamas al DropdownButtonFormField
+                      SizedBox(height: 10), // Espacio adicional hacia abajo
+                    ],
+                  ),
+                ),
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(10),
@@ -151,7 +150,7 @@ Padding(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      'Folio: ${filteredEncuestas[index].bp_folio ?? ''}',
+                                      'Folio: ${filteredEncuestas[index].bc_folio ?? ''}',
                                       style: TextStyle(
                                         fontSize: 18,
                                       ),
@@ -180,18 +179,20 @@ Padding(
   }
 
   DropdownButtonFormField<String> ddlEstatus() {
+    Set<String> uniqueEncuestas = encuestas.map((encuesta) => encuesta.bc_encuestaname ?? '').toSet();
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
-          hintText: 'Seleccione una Estatus',
-          border: InputBorder.none,
-          filled: false,
-          fillColor: Color.fromRGBO(204, 204, 204, 80),
-          hintStyle: TextStyle(fontWeight: FontWeight.bold)),
+        hintText: 'Seleccione una Estatus',
+        border: InputBorder.none,
+        filled: false,
+        fillColor: Color.fromRGBO(204, 204, 204, 80),
+        hintStyle: TextStyle(fontWeight: FontWeight.bold),
+      ),
       value: selectedResult,
-      items: encuestas.map((encuesta) {
+      items: uniqueEncuestas.map((encuesta) {
         return DropdownMenuItem<String>(
-          value: encuesta.crd52_nombre ?? '',
-          child: Text(encuesta.crd52_nombre ?? ''),
+          value: encuesta,
+          child: Text(encuesta),
         );
       }).toList(),
       icon: Icon(
@@ -201,11 +202,10 @@ Padding(
       onChanged: (String? value) {
         setState(() {
           selectedResult = value;
-          filteredEncuestas = encuestas
-              .where((encuesta) => encuesta.crd52_nombre == selectedResult)
-              .toList();
+          filteredEncuestas = encuestas.where((encuesta) => encuesta.bc_encuestaname == selectedResult).toList();
         });
       },
     );
   }
+
 }
