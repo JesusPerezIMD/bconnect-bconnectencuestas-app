@@ -18,7 +18,7 @@ class Environment {
   final TWILIO_API = 'https://twiliofunctionbconnect.azurewebsites.net/api';
   final WHATSAPP_NUMBER = "15165185350";
   final BITACORA_API =
-      "https://prod-27.westus.logic.azure.com:443/workflows/92fe24bbe4d940d48f848e8ef598a6a3/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=0zBoAtXL9sToEEJ1krPvv-KHh2Hx5hvKrkHEXyqGVZ8";
+      "https://prod-45.westus.logic.azure.com:443/workflows/eb24003a3e604314ab801a7dea5ced7c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pxQuFcqDl6DjWQ-I1m2hzzwi1e1fbt_X5gFNObncOts";
   
   //Production
   // final BCONNECT_API = "https://bconnect-auth-api.azurewebsites.net";

@@ -144,17 +144,19 @@ class BConnectService {
       String? division,
       String? compania,
       String? codemp,
-      String? servicename) async {
+      String? servicename,
+      String? clienteid) async {
     try {
       String? id;
       final response = await http.post(Uri.parse(apiBitacora),
           headers: {'Content-Type': 'application/json; charset=UTF-8'},
           body: jsonEncode(<String, String>{
-            'encuesta': encuesta!,
-            'division': division!,
-            'compania': compania!,
-            'codemp': codemp!,
-            'servicename': servicename!
+            'encuesta_value': encuesta!,
+            'division_value': division!,
+            'compania_value': compania!,
+            'codemp_value': codemp!,
+            'servicename_value': servicename!,
+            'clienteid_value': clienteid!
           }));
       if (response.statusCode == 200) {
         final result = response.body;

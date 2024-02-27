@@ -310,7 +310,7 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     idCompania = colaborador?.idcia;
     compania = colaborador?.nombrecia;
 
-    String id = await getBitacoraEncuesta(encuesta!, division!, compania!, codigo!, Environment().SERVICE_NAME);
+    String id = await getBitacoraEncuesta(encuesta!, division!, compania!, codigo!, Environment().SERVICE_NAME, '');
 
     String? url = oencuesta?.bc_url?.replaceAll("[encuesta_value]", encuesta!);
     url = url?.replaceAll('[codemp_value]', codigo!);
@@ -364,15 +364,23 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     }
   }
 
-  Future<String> getBitacoraEncuesta(String encuesta, String division,
-        String compania, String codemp, String servicename) async {
-      var result = await BConnectService()
-          .setBitacoraEncuesta(encuesta, division, compania, codemp, servicename);
-      if (mounted) {
-        setState(() {
-          bitacoraid = result;
-        });
-      }
-      return result!;
+  Future<String> getBitacoraEncuesta(
+      String encuesta,
+      String division,
+      String compania,
+      String codemp,
+      String servicename,
+      String clienteid) 
+      
+  async {
+    var result = await BConnectService().setBitacoraEncuesta(
+        encuesta, division, compania, codemp, servicename, clienteid);
+    if (mounted) {
+      setState(() {
+        bitacoraid = result;
+      });
+    }
+    return result!;
   }
+
 }
