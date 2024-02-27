@@ -1,5 +1,5 @@
 import 'package:bconnect_capacitacion/models/bc_colaborador.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/capacitacion_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/encuesta_view.dart';
 import 'package:flutter/material.dart';
 import 'package:bconnect_capacitacion/helpers/preferences_helper.dart';
 import 'package:bconnect_capacitacion/models/bc_user.dart';

@@ -1,7 +1,7 @@
 import 'package:bconnect_capacitacion/models/bc_colaborador.dart';
 import 'package:bconnect_capacitacion/models/bc_user.dart';
 import 'package:bconnect_capacitacion/views/account/account_view.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/capacitacion_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/encuesta_view.dart';
 import 'package:flutter/material.dart';
 
 import 'menu.dart';
@@ -11,7 +11,7 @@ import 'views/login_view.dart';
 class AppRoute {
   static const String loginRoute = 'Login';
   static const String authRoute = 'Auth';
-  static const String initialRoute = 'Capacitacion';
+  static const String initialRoute = 'Encuestas';
   static const String infoRoute = 'Info';
 
   static List<AppRouteItem> menuOptions = <AppRouteItem>[
@@ -28,8 +28,8 @@ class AppRoute {
       screen: const AuthPage(),
     ),
     AppRouteItem(
-      label: 'Capacitacion',
-      route: 'Capacitacion',
+      label: 'Encuestas',
+      route: 'Encuestas',
       icon: Icons.edit_note,
       screen: const CapacitacionPage(),
     ),

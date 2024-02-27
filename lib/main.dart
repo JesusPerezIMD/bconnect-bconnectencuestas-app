@@ -1,7 +1,7 @@
 import 'package:bconnect_capacitacion/app.dart';
 import 'package:bconnect_capacitacion/helpers/preferences_helper.dart';
 import 'package:bconnect_capacitacion/views/auth_view.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/capacitacion_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/encuesta_view.dart';
 import 'package:bconnect_capacitacion/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

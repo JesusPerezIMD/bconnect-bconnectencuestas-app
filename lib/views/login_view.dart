@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('BConnect - Capacitación'),
+        title: const Text('BConnect - Encuestas Bconnect'),
         elevation: 2,
       ),
       backgroundColor: Colors.grey[200],
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _launchUrl() async {
-    final url = Uri.parse('https://wa.me/%2b$whatsappNumber?text=Capacitación');
+    final url = Uri.parse('https://wa.me/%2b$whatsappNumber?text=Bconnect%20Encuesta');
     if (!await launchUrl(url)) {
       throw Exception('Could not launch url');
     }

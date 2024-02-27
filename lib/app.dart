@@ -25,7 +25,7 @@ class App extends StatelessWidget {
         Locale('es', 'es_mx'),
       ],
       theme: AppTheme.lightTheme,
-      title: 'BConnect - Capacitación',
+      title: 'BConnect - Encuestas Bconnect',
       home: home ?? const LoginPage(),
       routes: AppRoute.getRoutes(),
     );

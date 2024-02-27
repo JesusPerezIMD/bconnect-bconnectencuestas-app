@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:bconnect_capacitacion/app_route.dart';
 import 'package:bconnect_capacitacion/helpers/preferences_helper.dart';
 import 'package:bconnect_capacitacion/views/account/account_view.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/capacitacion_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/encuesta_view.dart';
 import '../../models/models.dart';
 import '../../components/components.dart';
 import 'package:intl/intl.dart';

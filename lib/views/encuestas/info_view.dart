@@ -1,4 +1,4 @@
-import 'package:bconnect_capacitacion/views/capacitacion/capacitacion_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/encuesta_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bconnect_capacitacion/env.dart';
@@ -8,7 +8,7 @@ import 'package:bconnect_capacitacion/models/customer.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/historial_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/historial_view.dart';
 
 class InfoPage extends StatefulWidget {
   final BCUser user;
@@ -35,7 +35,7 @@ class _InfoPageState extends State<InfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('BConnect - Capacitación'),
+          title: const Text('BConnect - Encuestas Bconnect'),
           elevation: 2,
         ),
         body: SingleChildScrollView(
@@ -49,7 +49,7 @@ class _InfoPageState extends State<InfoPage> {
                     child: Column(children: [
                       ListTile(
                         title: Text(
-                            'Gracias ${widget.user.names?.split(' ')[0] ?? ''}, gracias por responder la capacitación.'),
+                            'Gracias ${widget.user.names?.split(' ')[0] ?? ''}, gracias por responder la Encuesta.'),
                       ),
                       ListTile(
                         title: Text('Solicitud:  ${widget.encuesta}'),
@@ -173,7 +173,7 @@ class _InfoPageState extends State<InfoPage> {
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0)))),
               child: const Text(
-                'Nueva Capacitación',
+                'Nueva Encuesta',
                 style: TextStyle(color: Colors.white),
               ),
             )));

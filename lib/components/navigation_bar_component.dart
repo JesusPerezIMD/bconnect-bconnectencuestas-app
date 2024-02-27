@@ -1,8 +1,8 @@
 import 'package:bconnect_capacitacion/app_route.dart';
 import 'package:bconnect_capacitacion/env.dart';
 import 'package:bconnect_capacitacion/helpers/preferences_helper.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/capacitacion_view.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/historial_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/encuesta_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/historial_view.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +24,7 @@ class _NavigationBarComponenetState extends State<NavigationBarComponenet> {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.edit_note_outlined),
-          label: 'Capacitación',
+          label: 'Encuestas',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.history_outlined),

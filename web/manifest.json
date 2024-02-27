@@ -1,11 +1,11 @@
 {
-    "name": "BConnect Capacitación",
-    "short_name": "BConnect Capacitación",
+    "name": "BConnect Encuestas",
+    "short_name": "BConnect Encuestas",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",
     "theme_color": "#FFFFFF",
-    "description": "BConnect Capacitación",
+    "description": "BConnect Encuestas",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

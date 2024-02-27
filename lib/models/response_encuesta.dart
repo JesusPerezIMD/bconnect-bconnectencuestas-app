@@ -57,7 +57,7 @@ class SolicitudCapacitacion {
       bc_encuestaname = json['bc_encuestaname'] ?? '';
       bc_cliente = json['bc_cliente'] ?? '';
       bc_inicio = json['bc_inicio'] != null ? DateTime.parse(json['bc_inicio']) : null;
-      bc_fin = json['bc_fin'] != null ? DateTime.parse(json['bc_fin']) : null;
+      bc_fin = json['bc_fin'] != null ? DateTime.parse(json['createdon']) : null;
       bc_respuestaencuesta = json['bc_respuestaencuesta'] ?? '';
       bc_respuestaencuestaname = json['bc_respuestaencuestaname'] ?? '';
       bc_finalizado = json['bc_finalizado'] ?? 0;

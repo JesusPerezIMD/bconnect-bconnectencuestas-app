@@ -16,7 +16,7 @@ class BconnectAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('BConnect - Capacitación'),
+      title: const Text('BConnect - Encuestas Bconnect'),
       actions: [
         IconButton(
           padding: const EdgeInsets.all(0),
