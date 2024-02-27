@@ -65,6 +65,9 @@ class _InfoPageState extends State<InfoPage> {
                       const SizedBox(
                         height: 20,
                       ),
+                      const SizedBox(
+                        height: 20,
+                      ),
                       btnHome(),
                       const SizedBox(
                         height: 20,
