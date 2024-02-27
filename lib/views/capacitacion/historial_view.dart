@@ -21,51 +21,21 @@ class HistorialCapacitacionPage extends StatefulWidget {
 }
 
 class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
-  List<SolicitudCapacitacion> listResponsecapacitacion = [];
-  List<EstatusSolicitudCapacitacion> listEstatus = [];
+  List<SolicitudCapacitacion> encuestas = [];
   final _formKey = GlobalKey<FormState>();
   BCUser? user;
+  String? userid = '';
+  String? colaboradorid = '';
   FirebaseUser? firebaseUser;
   BCColaborador? colaborador;
   bool loadingReports = true;
-  String variablemonto2="Solicitudes aprobacion 2";
-  String aprobadorCapacitacion="Aprobador Capacitación";
-  double monto2=0;
-  String nameCapacitacion="";
-  final formatCurrency =
-      NumberFormat.currency(locale: 'es_MX', symbol: '', decimalDigits: 2);
-  String selectedEstatus = 'Todos';
-  List<String> estatusOptions = [
-    'Todos',
-    'Creada',
-    'Aprobada Supervisor',
-    'Aprobada Supervisor Grupo',
-    'Aprobada Capacitación',
-    'Cerrada',
-    'Rechazada',
-  ];
-  ListTileTitleAlignment? titleAlignment; 
-  Capacitacion? oencuesta;
-  List<Capacitacion> encuestas = [];
-  String? userid = '';
-  bool bCapacitacionBM = false;
-  String serviceName=Environment().SERVICE_NAME;
-  String codemp ='';
 
-  Future<void> getEncuestas(String division) async {
-    codemp = colaborador!.codemp!;
-    var result = await BConnectService().getCapacitacion(division, serviceName, codemp);
-
+  Future<void> getHistory(String codemp) async {
+    var result = await BConnectService().getHistorySaludEncuestas(codemp);
     if (mounted) {
       setState(() {
-        if (result.isNotEmpty) {
-          //result.sort((a, b) => (a.bc_nombre ?? '').compareTo(b.bc_nombre ?? ''));
-          encuestas = result;
-          oencuesta = encuestas.first;
-        } else {
-          encuestas = [];
-          oencuesta = null;
-        }
+        encuestas = result;
+        loadingReports = false;
       });
     }
   }
@@ -92,7 +62,8 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
       }
       final jsonColaborador = await PreferencesHelper.getString('colaborador');
       colaborador = BCColaborador.fromJson(jsonDecode(jsonColaborador ?? ''));
-     
+      colaboradorid = colaborador?.codemp;
+      getHistory(colaboradorid!);
     } catch (e) {
       await Navigator.pushNamedAndRemoveUntil(
           context, AppRoute.loginRoute, (route) => false);
@@ -156,23 +127,21 @@ body: encuestas.isEmpty
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Folio: ${encuestas[index].bc_nombre ?? ''}',
+                          'Folio: ${encuestas[index].bp_folio ?? ''}',
                           style: TextStyle(
                             fontSize: 18,
                           ),
                         ),
-                        Text(
-                          'DH: ${encuestas[index].bc_nombre?? ''}',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-
                       ],
                     ),
                   ),
-
+                  Text(
+                    '${DateFormat('dd/MM/yyyy hh:mm a').format(encuestas[index].createdon ?? DateTime.now())}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                    ),
+                  ),
                     ],
                   ),
                   Divider(height: 0),
