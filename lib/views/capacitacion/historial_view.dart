@@ -43,6 +43,13 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () async {
+      await initUser(context);
+        if (mounted) {
+          setState(() {
+          });
+        }
+    });
   }
 
   Future<void> initUser(BuildContext context) async {

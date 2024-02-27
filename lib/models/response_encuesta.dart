@@ -1,5 +1,5 @@
 class SolicitudCapacitacion {
-  int? crd52_responseencuestaid;
+  String? crd52_responseencuestaid;
   DateTime? createdon;
   int? statecode;
   String? crd52_nombre;
@@ -26,7 +26,7 @@ class SolicitudCapacitacion {
   });
   SolicitudCapacitacion.fromJson(Map<String, dynamic> json) {
     crd52_responseencuestaid = json['crd52_responseencuestaid'];
-    createdon = DateTime.parse(json['createdon']);
+    createdon = json['createdon'] != null ? DateTime.parse(json['createdon']) : null;
     statecode = json['statecode'];
     crd52_nombre = json['crd52_nombre'];
     bp_compania = json['bp_compania'];

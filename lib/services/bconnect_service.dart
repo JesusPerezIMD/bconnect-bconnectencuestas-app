@@ -125,7 +125,7 @@ class BConnectService {
     try {
       List<SolicitudCapacitacion> capacitacion = [];
       final response = await http.get(
-          Uri.parse('$apiUrl​/EncuestaSalud​/getHistorySaludEncuestas?codemp=$codemp'),
+          Uri.parse('$apiUrl/EncuestaSalud/getHistorySaludEncuestas?codemp=$codemp'),
           headers: {'Content-Type': 'application/json; charset=UTF-8'});
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);

@@ -29,7 +29,7 @@ class Environment {
   
   final DEFAULT_LOCATION = const gm.LatLng(20.968147, -89.629872);
   final SERVICE_ID = "34542C82-6659-4DA3-804B-1B62FB44EDSA"; //capacitacion
-  final SERVICE_NAME="Capacitación,Solicitudes DNC";
+  final SERVICE_NAME="BConnect Encuestas";
 
   static final Environment _environment = Environment._internal();
 

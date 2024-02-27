@@ -315,7 +315,7 @@ Widget build(BuildContext context) {
     url = url?.replaceAll('[nombreemp_value]', nombre_empleado!);
     url = url?.replaceAll('[apellidoemp_value]', apellido_empleado!);
     url = url?.replaceAll('[uuid_value]', idColaborador!);
-    url = url?.replaceAll('[idcia_value]', compania!);
+    url = url?.replaceAll('[idcia_value]', idCompania!);
 
     Uri uri = Uri.parse(url!);
 
