@@ -5,7 +5,6 @@ import 'package:bconnect_capacitacion/app_theme.dart';
 import 'package:bconnect_capacitacion/constants.dart';
 import 'package:bconnect_capacitacion/env.dart';
 import 'package:bconnect_capacitacion/views/account/account_view.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/customers_component.dart';
 import 'package:bconnect_capacitacion/views/capacitacion/info_view.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,11 +34,10 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   bool isValidCustomer = true;
   bool isLoadingButton = false;
   Customer? selectedCustomer;
-  gm.LatLng? selectedGps;
-  String whatsappNumber = Environment().WHATSAPP_NUMBER;
   String? codigo = '';
   String? idColaborador = '';
   String? division = '';
+  String? idCompania = '';
   String? compania = '';
   String? apellido_empleado = '';
   String? nombre_empleado = '';
@@ -49,7 +47,9 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   List<Capacitacion> encuestas = [];
   String? userid = '';
   String serviceName = Environment().SERVICE_NAME;
+  String? bitacoraid = '';
   bool isLoading = false;
+  List<Capacitacion> filteredEncuestas = [];
   final TextEditingController _searchController = TextEditingController();
 
   Future<void> getEncuestas(String division) async {
@@ -106,8 +106,6 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
           context, AppRoute.loginRoute, (route) => false);
     }
   }
-
-  List<Capacitacion> filteredEncuestas = [];
 
 @override
 Widget build(BuildContext context) {
@@ -231,9 +229,6 @@ Widget build(BuildContext context) {
   );
 }
 
-
-
-
   void showValidForm() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -285,7 +280,6 @@ Widget build(BuildContext context) {
   );
 }
 
-
   onSubmit() {
     if (_formKey.currentState!.validate() && isValid) {
       _formKey.currentState?.save();
@@ -308,7 +302,11 @@ Widget build(BuildContext context) {
     nombre_empleado = colaborador?.names!;
     apellido_empleado = colaborador?.lastNames;
     idColaborador = colaborador?.sId;
-    compania = colaborador?.idcia;
+    idCompania = colaborador?.idcia;
+    compania = colaborador?.nombrecia;
+
+    await getBitacoraEncuesta(encuesta!, division!, compania!, codigo!,
+        Environment().SERVICE_NAME);
 
     String? url = oencuesta?.bc_url?.replaceAll("[encuesta_value]", encuesta!);
     url = url?.replaceAll('[codemp_value]', codigo!);
@@ -357,7 +355,22 @@ Widget build(BuildContext context) {
           backgroundColor: Colors.red,
           duration: Duration(seconds: 3),
           content: Text(
-              "Ocurrió un error al solicitar la Capacitación. Intente de nuevo más tarde.")));
+              "Ocurrió un error al solicitar la Encuesta. Intente de nuevo más tarde.")));
+    }
+  }
+
+    Future<void> getBitacoraEncuesta(
+      String encuesta,
+      String division,
+      String compania,
+      String codemp,
+      String servicename) async {
+    var result = await BConnectService().setBitacoraEncuesta(
+        encuesta, division, compania, codemp, servicename);
+    if (mounted) {
+      setState(() {
+        bitacoraid = result;
+      });
     }
   }
 }

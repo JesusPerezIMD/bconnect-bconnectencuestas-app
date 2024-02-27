@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'package:bconnect_capacitacion/env.dart';
 import 'package:bconnect_capacitacion/models/models.dart';
 import 'package:http/http.dart' as http;
-import '../models/response_capacitaciondnc.dart';
-import '../models/response_capacitacion.dart';
 
 class BConnectService {
   String? token;
   String apiUrl = Environment().BCONNECT_API;
+  String apiBitacora = Environment().BITACORA_API;
 
   BConnectService();
 
@@ -103,34 +102,6 @@ class BConnectService {
     }
   }
 
-  Future<List<Customer>> getCustomers(
-      String textSearch,
-      num longitude,
-      num latitude,
-      num limit,
-      num maxDistance,
-      String codemp,
-      String division,
-      String compania,
-      String sId,
-      String sIdEncuesta) async {
-    try {
-      List<Customer> customers = [];
-      final response = await http.get(
-          Uri.parse(
-              '$apiUrl/Capacitacion/Clientes?textoBusqueda=$textSearch&longitud=$longitude&latitud=$latitude&limite=$limit&distanciaMax=$maxDistance&codemp=$codemp&sId=$sId&idEncuesta=$sIdEncuesta&division=$division&compania=$compania'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        for (var data in result) {
-          customers.add(Customer.fromJson(data));
-        }
-      }
-      return customers;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
 
   Future<List<Capacitacion>> getCapacitacion(String userid,String serviceName, String codemp) async {
     try {
@@ -150,11 +121,11 @@ class BConnectService {
     }
   }
 
-  Future<List<SolicitudCapacitacion>> getResponseCapacitacion(String codemp,String status) async {
+  Future<List<SolicitudCapacitacion>> getHistorySaludEncuestas(String codemp) async {
     try {
       List<SolicitudCapacitacion> capacitacion = [];
       final response = await http.get(
-          Uri.parse('$apiUrl/Encuestas/getCapacitacion?empCode=$codemp&status=$status'),
+          Uri.parse('$apiUrl​/EncuestaSalud​/getHistorySaludEncuestas?codemp=$codemp'),
           headers: {'Content-Type': 'application/json; charset=UTF-8'});
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
@@ -168,56 +139,31 @@ class BConnectService {
     }
   }
 
-  Future<List<SolicitudCapacitacionDNC>> getResponseCapacitacionDNC(String codemp) async {
+  Future<String?> setBitacoraEncuesta(
+      String? encuesta,
+      String? division,
+      String? compania,
+      String? codemp,
+      String? servicename) async {
     try {
-      List<SolicitudCapacitacionDNC> capacitacion = [];
-      final response = await http.get(
-          Uri.parse('$apiUrl/Encuestas/getCapacitacionDNC?empCode=$codemp'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
+      String? id;
+      final response = await http.post(Uri.parse(apiBitacora),
+          headers: {'Content-Type': 'application/json; charset=UTF-8'},
+          body: jsonEncode(<String, String>{
+            'encuesta': encuesta!,
+            'division': division!,
+            'compania': compania!,
+            'codemp': codemp!,
+            'servicename': servicename!
+          }));
       if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        for (var data in result) {
-          capacitacion.add(SolicitudCapacitacionDNC.fromJson(data));
-        }
+        final result = response.body;
+        id = result;
       }
-      return capacitacion;
+      return id;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-  Future<List<ReglasSolicitudCapacitacion>> getReglasAprobacion() async {
-    try {
-      List<ReglasSolicitudCapacitacion> reglas = [];
-      final response = await http.get(
-          Uri.parse('$apiUrl/Encuestas/getReglasAprobacion'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        for (var data in result) {
-          reglas.add(ReglasSolicitudCapacitacion.fromJson(data));
-        }
-      }
-      return reglas;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-  Future<List<EstatusSolicitudCapacitacion>> getDetallesCapacitacion(String Id) async {
-    try {
-      List<EstatusSolicitudCapacitacion> estatus = [];
-      final response = await http.get(
-          Uri.parse('$apiUrl/Encuestas/getDetallesCapacitacion?Id=$Id'),
-          headers: {'Content-Type': 'application/json; charset=UTF-8'});
-      if (response.statusCode == 200) {
-        final result = jsonDecode(response.body);
-        for (var data in result) {
-          estatus.add(EstatusSolicitudCapacitacion.fromJson(data));
-        }
-      }
-      return estatus;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
 }
