@@ -22,7 +22,8 @@ class HistorialCapacitacionPage extends StatefulWidget {
 
 class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
   List<SolicitudCapacitacion> encuestas = [];
-  final _formKey = GlobalKey<FormState>();
+  List<SolicitudCapacitacion> filteredEncuestas = [];
+  String? selectedResult;
   BCUser? user;
   String? userid = '';
   String? colaboradorid = '';
@@ -34,8 +35,17 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
     var result = await BConnectService().getHistorySaludEncuestas(codemp);
     if (mounted) {
       setState(() {
-        encuestas = result;
-        loadingReports = false;
+        if (result.isNotEmpty) {
+          encuestas = result;
+          filteredEncuestas = encuestas;
+          selectedResult = filteredEncuestas.first.crd52_nombre;
+          filteredEncuestas = encuestas
+              .where((encuesta) => encuesta.crd52_nombre == selectedResult)
+              .toList();
+          loadingReports = false;
+        } else {
+          encuestas = [];
+        }
       });
     }
   }
@@ -45,10 +55,9 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
     super.initState();
     Future.delayed(Duration.zero, () async {
       await initUser(context);
-        if (mounted) {
-          setState(() {
-          });
-        }
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
@@ -77,88 +86,126 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  final userInitials =
-      '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
-  return Scaffold(
-    appBar: BconnectAppBar(
-      onPressed: () => {
-        Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-                builder: (BuildContext context) => AccountPage(
-                    user ?? BCUser(), colaborador ?? BCColaborador())))
-      },
-      userInitials: userInitials,
-    ),
-    bottomNavigationBar: NavigationBarComponenet(1),
-body: encuestas.isEmpty
-    ? Center(
-        child: Text(
-          "No existen datos",
-          style: TextStyle(
-            fontSize: 16, // Puedes ajustar el tamaño del texto aquí
-            color: Colors.grey, // Puedes ajustar el color del texto aquí
-          ),
-        ),
-      )
-    : Column(
-        children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
+  @override
+  Widget build(BuildContext context) {
+    final userInitials =
+        '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
+    return Scaffold(
+      appBar: BconnectAppBar(
+        onPressed: () => {
+          Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => AccountPage(
+                      user ?? BCUser(), colaborador ?? BCColaborador())))
+        },
+        userInitials: userInitials,
+      ),
+      bottomNavigationBar: NavigationBarComponenet(1),
+      body: encuestas.isEmpty
+          ? Center(
               child: Text(
-                "Historial de Bconnect Encuestas",
+                "No existen datos",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold, // Puedes ajustar el estilo del título aquí
+                  fontSize: 16,
+                  color: Colors.grey,
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(10),
-              itemCount: encuestas.length,
-              itemBuilder: (context, index) {
-                return Column(
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Folio: ${encuestas[index].bp_folio ?? ''}',
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    '${DateFormat('dd/MM/yyyy hh:mm a').format(encuestas[index].createdon ?? DateTime.now())}',
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "Historial de Bconnect Encuestas",
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color.fromARGB(255, 0, 0, 0),
                       fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                    ],
+                ),
+Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+  child: Column(
+    children: [
+      ddlEstatus(), // Aquí llamas al DropdownButtonFormField
+      SizedBox(height: 10), // Espacio adicional hacia abajo
+    ],
+  ),
+),
+
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(10),
+                    itemCount: filteredEncuestas.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Folio: ${filteredEncuestas[index].bp_folio ?? ''}',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                '${DateFormat('dd/MM/yyyy hh:mm a').format(filteredEncuestas[index].createdon ?? DateTime.now())}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(height: 0),
+                        ],
+                      );
+                    },
                   ),
-                  Divider(height: 0),
-                ],
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
+    );
+  }
+
+  DropdownButtonFormField<String> ddlEstatus() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+          hintText: 'Seleccione una Estatus',
+          border: InputBorder.none,
+          filled: false,
+          fillColor: Color.fromRGBO(204, 204, 204, 80),
+          hintStyle: TextStyle(fontWeight: FontWeight.bold)),
+      value: selectedResult,
+      items: encuestas.map((encuesta) {
+        return DropdownMenuItem<String>(
+          value: encuesta.crd52_nombre ?? '',
+          child: Text(encuesta.crd52_nombre ?? ''),
+        );
+      }).toList(),
+      icon: Icon(
+        Icons.expand_more,
+        color: Colors.red,
       ),
-  );
-}
+      onChanged: (String? value) {
+        setState(() {
+          selectedResult = value;
+          filteredEncuestas = encuestas
+              .where((encuesta) => encuesta.crd52_nombre == selectedResult)
+              .toList();
+        });
+      },
+    );
+  }
 }

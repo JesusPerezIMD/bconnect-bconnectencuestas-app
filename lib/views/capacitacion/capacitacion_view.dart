@@ -56,11 +56,9 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     var colemp = colaborador?.codemp;
     var result =
         await BConnectService().getCapacitacion(division, serviceName, colemp!);
-
     if (mounted) {
       setState(() {
         if (result.isNotEmpty) {
-          //result.sort((a, b) => (a.bc_nombre ?? '').compareTo(b.bc_nombre ?? ''));
           encuestas = result;
           oencuesta = null;
         } else {
@@ -107,127 +105,134 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  final userInitials =
-      '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
+  @override
+  Widget build(BuildContext context) {
+    final userInitials =
+        '${(user?.names ?? '') == '' ? '' : (user?.names ?? '').substring(0, 1)}${(user?.lastNames ?? '') == '' ? '' : (user?.lastNames ?? '').substring(0, 1)}';
 
-  return Scaffold(
-    appBar: BconnectAppBar(
-      onPressed: () => {
-        Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-                builder: (BuildContext context) => AccountPage(
-                    user ?? BCUser(), colaborador ?? BCColaborador())))
-      },
-      userInitials: userInitials,
-    ),
-    bottomNavigationBar: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: btnSave(),
-        ),
-        NavigationBarComponenet(0),
-      ],
-    ),
-    body: Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            Material(
-              elevation: 0.0,
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Buscar Encuesta',
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
-                    filled: true,
-                    fillColor: Colors.white,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      borderSide: BorderSide(color: Colors.grey, width: 0.5),
+    return Scaffold(
+      appBar: BconnectAppBar(
+        onPressed: () => {
+          Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => AccountPage(
+                      user ?? BCUser(), colaborador ?? BCColaborador())))
+        },
+        userInitials: userInitials,
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: btnSave(),
+          ),
+          NavigationBarComponenet(0),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              SizedBox(height: 10),
+              Material(
+                elevation: 0.0,
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(8, 8, 8, 16),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Buscar Encuesta',
+                      prefixIcon: Icon(Icons.search, color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.grey, width: 0.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.grey, width: 0.5),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      borderSide: BorderSide(color: Colors.grey, width: 0.5),
-                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        filteredEncuestas = encuestas
+                            .where((encuesta) => encuesta.bc_nombre!
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+
+                        oencuesta = null;
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      filteredEncuestas = encuestas
-                          .where((encuesta) => encuesta.bc_nombre!.toLowerCase().contains(value.toLowerCase()))
-                          .toList();
-
-                          oencuesta = null;
-                    });
-                  },
                 ),
               ),
-            ),
-            Expanded(
-              child: filteredEncuestas.isEmpty && _searchController.text.isEmpty
-                  ? ListView.builder(
-                      itemCount: encuestas.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              oencuesta = encuestas[index];
-                            });
-                          },
-                          child: Container(
-                            color: oencuesta == encuestas[index]
-                                ? Colors.grey.withOpacity(0.4)
-                                : Colors.transparent,
-                            child: ListTile(
-                              title: Text(encuestas[index].bc_nombre.toString()),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : filteredEncuestas.isEmpty
-                      ? Center(
-                          child: Text(
-                            "No existen datos...",
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: filteredEncuestas.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  oencuesta = filteredEncuestas[index];
-                                });
-                              },
-                              child: Container(
-                                color: oencuesta == filteredEncuestas[index]
-                                    ? Colors.grey.withOpacity(0.4)
-                                    : Colors.transparent,
-                                child: ListTile(
-                                  title: Text(filteredEncuestas[index].bc_nombre.toString()),
-                                ),
+              Expanded(
+                child: filteredEncuestas.isEmpty &&
+                        _searchController.text.isEmpty
+                    ? ListView.builder(
+                        itemCount: encuestas.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                oencuesta = encuestas[index];
+                              });
+                            },
+                            child: Container(
+                              color: oencuesta == encuestas[index]
+                                  ? Colors.grey.withOpacity(0.4)
+                                  : Colors.transparent,
+                              child: ListTile(
+                                title:
+                                    Text(encuestas[index].bc_nombre.toString()),
                               ),
-                            );
-                          },
-                        ),
-            )
-          ],
+                            ),
+                          );
+                        },
+                      )
+                    : filteredEncuestas.isEmpty
+                        ? Center(
+                            child: Text(
+                              "No existen datos...",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.grey),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: filteredEncuestas.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    oencuesta = filteredEncuestas[index];
+                                  });
+                                },
+                                child: Container(
+                                  color: oencuesta == filteredEncuestas[index]
+                                      ? Colors.grey.withOpacity(0.4)
+                                      : Colors.transparent,
+                                  child: ListTile(
+                                    title: Text(filteredEncuestas[index]
+                                        .bc_nombre
+                                        .toString()),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+              )
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   void showValidForm() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -239,46 +244,46 @@ Widget build(BuildContext context) {
   }
 
   SizedBox btnSave() {
-  return SizedBox(
-    width: 600,
-    height: 50,
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: ElevatedButton(
-        onPressed: oencuesta != null ? onSubmit : null,
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0),
+    return SizedBox(
+      width: 600,
+      height: 50,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: ElevatedButton(
+          onPressed: oencuesta != null ? onSubmit : null,
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
             ),
           ),
-        ),
-        child: !isLoadingButton
-            ? const Text(
-                'Seleccionar',
-                style: TextStyle(fontSize: 16),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 28,
-                    height: 28,
-                    padding: const EdgeInsets.all(5.0),
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 3,
+          child: !isLoadingButton
+              ? const Text(
+                  'Seleccionar',
+                  style: TextStyle(fontSize: 16),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      padding: const EdgeInsets.all(5.0),
+                      child: const CircularProgressIndicator(
+                        strokeWidth: 3,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    'Procesando...',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
+                    const Text(
+                      ' Procesando...',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   onSubmit() {
     if (_formKey.currentState!.validate() && isValid) {
@@ -305,8 +310,7 @@ Widget build(BuildContext context) {
     idCompania = colaborador?.idcia;
     compania = colaborador?.nombrecia;
 
-    await getBitacoraEncuesta(encuesta!, division!, compania!, codigo!,
-        Environment().SERVICE_NAME);
+    String id = await getBitacoraEncuesta(encuesta!, division!, compania!, codigo!, Environment().SERVICE_NAME);
 
     String? url = oencuesta?.bc_url?.replaceAll("[encuesta_value]", encuesta!);
     url = url?.replaceAll('[codemp_value]', codigo!);
@@ -316,6 +320,7 @@ Widget build(BuildContext context) {
     url = url?.replaceAll('[apellidoemp_value]', apellido_empleado!);
     url = url?.replaceAll('[uuid_value]', idColaborador!);
     url = url?.replaceAll('[idcia_value]', idCompania!);
+    url = url?.replaceAll('[bitacoraid_value]', id);
 
     Uri uri = Uri.parse(url!);
 
@@ -359,18 +364,15 @@ Widget build(BuildContext context) {
     }
   }
 
-    Future<void> getBitacoraEncuesta(
-      String encuesta,
-      String division,
-      String compania,
-      String codemp,
-      String servicename) async {
-    var result = await BConnectService().setBitacoraEncuesta(
-        encuesta, division, compania, codemp, servicename);
-    if (mounted) {
-      setState(() {
-        bitacoraid = result;
-      });
-    }
+  Future<String> getBitacoraEncuesta(String encuesta, String division,
+        String compania, String codemp, String servicename) async {
+      var result = await BConnectService()
+          .setBitacoraEncuesta(encuesta, division, compania, codemp, servicename);
+      if (mounted) {
+        setState(() {
+          bitacoraid = result;
+        });
+      }
+      return result!;
   }
 }
