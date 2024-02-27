@@ -5,7 +5,7 @@ import 'package:bconnect_capacitacion/app_theme.dart';
 import 'package:bconnect_capacitacion/constants.dart';
 import 'package:bconnect_capacitacion/env.dart';
 import 'package:bconnect_capacitacion/views/account/account_view.dart';
-import 'package:bconnect_capacitacion/views/capacitacion/info_view.dart';
+import 'package:bconnect_capacitacion/views/encuestas/info_view.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
