@@ -52,7 +52,7 @@ class _InfoPageState extends State<InfoPage> {
                             'Gracias ${widget.user.names?.split(' ')[0] ?? ''}, gracias por responder la Encuesta.'),
                       ),
                       ListTile(
-                        title: Text('Solicitud:  ${widget.encuesta}'),
+                        title: Text('Encuesta:  ${widget.encuesta}'),
                       ),
                       const SizedBox(
                         height: 20,

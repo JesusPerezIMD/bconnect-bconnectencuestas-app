@@ -43,19 +43,19 @@ class _CapacitacionPageState extends State<CapacitacionPage> {
   String? nombre_empleado = '';
   String? telefono = '';
   String? encuesta = '';
-  Capacitacion? oencuesta;
-  List<Capacitacion> encuestas = [];
+  Encuestas? oencuesta;
+  List<Encuestas> encuestas = [];
   String? userid = '';
   String serviceName = Environment().SERVICE_NAME;
   String? bitacoraid = '';
   bool isLoading = false;
-  List<Capacitacion> filteredEncuestas = [];
+  List<Encuestas> filteredEncuestas = [];
   final TextEditingController _searchController = TextEditingController();
 
   Future<void> getEncuestas(String division) async {
     var colemp = colaborador?.codemp;
     var result =
-        await BConnectService().getCapacitacion(division, serviceName, colemp!);
+        await BConnectService().getEncuestas(division, serviceName, colemp!);
     if (mounted) {
       setState(() {
         if (result.isNotEmpty) {

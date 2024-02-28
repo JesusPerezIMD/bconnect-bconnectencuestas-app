@@ -102,17 +102,16 @@ class BConnectService {
     }
   }
 
-
-  Future<List<Capacitacion>> getCapacitacion(String userid,String serviceName, String codemp) async {
+  Future<List<Encuestas>> getEncuestas(String userid,String serviceName, String codemp) async {
     try {
-      List<Capacitacion> capacitacion = [];
+      List<Encuestas> capacitacion = [];
       final response = await http.get(
           Uri.parse('$apiUrl/Encuestas/getEncuestasbyDivService?userid=$userid&serviceName=$serviceName'),
           headers: {'Content-Type': 'application/json; charset=UTF-8'});
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         for (var data in result) {
-          capacitacion.add(Capacitacion.fromJson(data));
+          capacitacion.add(Encuestas.fromJson(data));
         }
       }
       return capacitacion;
@@ -121,16 +120,16 @@ class BConnectService {
     }
   }
 
-  Future<List<SolicitudCapacitacion>> getHistorySaludEncuestas(String codemp) async {
+  Future<List<BitacoraEncuesta>> getHistorySaludEncuestas(String codemp) async {
     try {
-      List<SolicitudCapacitacion> capacitacion = [];
+      List<BitacoraEncuesta> capacitacion = [];
       final response = await http.get(
           Uri.parse('$apiUrl/Encuestas/getBitacoraEncuesta?codemp=$codemp'),
           headers: {'Content-Type': 'application/json; charset=UTF-8'});
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         for (var data in result) {
-          capacitacion.add(SolicitudCapacitacion.fromJson(data));
+          capacitacion.add(BitacoraEncuesta.fromJson(data));
         }
       }
       return capacitacion;

@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 import '../../services/bconnect_service.dart';
 
 class HistorialCapacitacionPage extends StatefulWidget {
-  final SolicitudCapacitacion? responsecapacitacion;
+  final BitacoraEncuesta? responsecapacitacion;
   const HistorialCapacitacionPage({Key? key, this.responsecapacitacion})
       : super(key: key);
   @override
@@ -21,8 +21,8 @@ class HistorialCapacitacionPage extends StatefulWidget {
 }
 
 class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
-  List<SolicitudCapacitacion> encuestas = [];
-  List<SolicitudCapacitacion> filteredEncuestas = [];
+  List<BitacoraEncuesta> encuestas = [];
+  List<BitacoraEncuesta> filteredEncuestas = [];
   String? selectedResult;
   BCUser? user;
   String? userid = '';
@@ -118,7 +118,7 @@ class _HistorialCapacitacionPageState extends State<HistorialCapacitacionPage> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(
-                    "Historial de Bconnect Encuestas",
+                    "Historial de Encuestas",
                     style: TextStyle(
                       color: Color.fromARGB(255, 0, 0, 0),
                       fontSize: 14,

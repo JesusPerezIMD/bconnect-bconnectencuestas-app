@@ -1,4 +1,4 @@
-class SolicitudCapacitacion {
+class BitacoraEncuesta {
   String? bc_bitacoraencuestaid;
   DateTime? createdon;
   int? statecode;
@@ -20,7 +20,7 @@ class SolicitudCapacitacion {
   String? bc_finalizadoname;
   String? bc_folio;
 
-  SolicitudCapacitacion({
+  BitacoraEncuesta({
     required this.bc_bitacoraencuestaid,
     required this.createdon,
     required this.statecode,
@@ -42,7 +42,8 @@ class SolicitudCapacitacion {
     required this.bc_finalizadoname,
     required this.bc_folio,
   });
-  SolicitudCapacitacion.fromJson(Map<String, dynamic> json) {
+
+  BitacoraEncuesta.fromJson(Map<String, dynamic> json) {
       bc_bitacoraencuestaid = json['bc_bitacoraencuestaid'] ?? '';
       createdon = json['createdon'] != null ? DateTime.parse(json['createdon']) : null;
       statecode = json['statecode'] ?? 0;
